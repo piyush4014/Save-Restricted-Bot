@@ -14,6 +14,8 @@ def getenv(var): return os.environ.get(var) or DATA.get(var, None)
 bot_token = getenv("TOKEN") 
 api_hash = getenv("HASH") 
 api_id = getenv("ID")
+SUDO_USERS = list(map(int, getenv("SUDO_USERS", "").split()))
+
 bot = Client("mybot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
 ss = getenv("STRING")
@@ -69,7 +71,7 @@ def send_start(client: pyrogram.client.Client, message: pyrogram.types.messages_
 	reply_markup=InlineKeyboardMarkup([[ InlineKeyboardButton("🌐 Source Code", url="https://github.com/bipinkrish/Save-Restricted-Bot")]]), reply_to_message_id=message.id)
 
 
-@bot.on_message(filters.text)
+@bot.on_message(filters.text & filters.user(SUDO_USERS))
 def save(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
 	print(message.text)
 
